@@ -89,7 +89,7 @@ if(isset($_POST['name']) && isset($_POST['pass']) && isset($_POST['email']) )
 			$Password = md5($Pass);
 			
 			$Date = date('Y-m-d H:i:s');
-			$userid=1;
+			$userid=0;
 			// Creation de l'utilistateur
 			if( $GM == 1)
 			{
