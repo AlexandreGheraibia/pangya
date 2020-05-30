@@ -11,7 +11,7 @@ if(isset($_POST['name']) && isset($_POST['pass']) && isset($_POST['email']) )
 		$request=new MngDb();
 		$res=$request->execRequest("SELECT * FROM account WHERE id='".$user->login()."'",0);
 		
-		// The account already exist
+		// Does the account already exist
 		if (mysqli_num_rows($res) > 0) 
 		{
 			die('<div class="formstatuserror">Pseudo In Use ... Try other </div>');
