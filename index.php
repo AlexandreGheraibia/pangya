@@ -47,7 +47,7 @@ require("./config.php");
 				var str = $(this).serialize();
 				$.ajax({
 				   type: "POST",
-				   url: "./php/insciption.php",
+				   url: "./php/register.php",
 				   data: str,
 				   success: function(msg)
 				   {
