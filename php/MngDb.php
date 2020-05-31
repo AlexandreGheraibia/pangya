@@ -1,5 +1,5 @@
 <?php
-require("../config.php");
+
 class MngDb{
 	private $_mysqli;
 	

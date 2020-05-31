@@ -1,5 +1,6 @@
 <?php
 require("./lib.php");
+require("../config.php");
 require("./MngUser.php");
 require("./MngDb.php");
 
@@ -9,17 +10,18 @@ if(isset($_POST['name']) && isset($_POST['pass']) && isset($_POST['email']) )
 		$user=new MngUser(0,Secure_text($_POST['name']),Secure_text($_POST['pass']), Secure_text(trim($_POST['email'])));
 		$user->setGm(isset($_POST['gm']));
 		$request=new MngDb();
-		$res=$request->execRequest("SELECT * FROM account WHERE id='".$user->login()."'",0);
+		$res=$request->execRequest("SELECT * FROM account WHERE id='".$user->login()."'",'last id not found');
 		
-		// Does the account already exist
+		// The account already exist
 		if (mysqli_num_rows($res) > 0) 
 		{
 			die('<div class="formstatuserror">Pseudo In Use ... Try other </div>');
 		}
 		
 		// User creation
+		$capability=($user->gm()?CAPABILITY:0);
 		$statement = "INSERT INTO account(ID, PASSWORD, IDState, LastLogonTime, BlockTime, Logon, Sex, School, Event, MannerFlag, Event1, Event2, ChannelFlag, RegDate, NICK, UserName, UserIp, ServerID, LogonCount, capability, doTutorial)
-			VALUES('".$user->login()."', '".$user->md5Pass()."',0, '".$user->dateToUse()."',0,0,0,0,0,0,0,0,0, '".$user->dateToUse()."', '".$user->id()."', '".$user->id()."', '127.0.0.1', 0, 1 , ".($user->gm()?CAPABILITY:0).",1);";
+			VALUES('".$user->login()."', '".$user->md5Pass()."',0, '".$user->dateToUse()."',0,0,0,0,0,0,0,0,0, '".$user->dateToUse()."', '".$user->id()."', '".$user->id()."', '".$_SERVER['REMOTE_ADDR']."', 0, 1 , '".$capability."', 1);";
 		$request->execRequest($statement,'creation fail');
 		
 		// Retrieve user ID
@@ -53,35 +55,35 @@ if(isset($_POST['name']) && isset($_POST['pass']) && isset($_POST['email']) )
 		$request->execRequest($statement,'Pangya Macro can\'t be set');
 	
 		//Pangya Reward
-		$statement = "INSERT INTO pangya_attendance_reward(UID, counter, item_typeid_now, item_qntd_now, item_typeid_after, item_qntd_after, login, reg_date) VALUES('".$user->id()."',0,0,0,0,0,0,'".$user->dateToUse()."')";
+		$statement = "INSERT INTO pangya_attendance_reward(UID, counter, item_typeid_now, item_qntd_now, item_typeid_after, item_qntd_after, login, reg_date) VALUES('".$user->id()."', 0, 0, 0, 0, 0, 0,'".$user->dateToUse()."')";
 		$request->execRequest($statement,'Pangya Reward can\'t be set');
 		
 		//Pangya Scratchy
-		$statement = "INSERT INTO pangya_scratchy_prob_sec(UID,scratchy_sec) VALUES('".$user->id()."',1000)";
+		$statement = "INSERT INTO pangya_scratchy_prob_sec(UID,scratchy_sec) VALUES('".$user->id()."', 1000)";
 		$request->execRequest($statement,'Pangya Scratchy can\'t be set');
 		
 		//Pangya Black pappel
-		$statement = "INSERT INTO black_papel_prob_sec(UID,probabilidade) VALUES('".$user->id()."',1000)";
+		$statement = "INSERT INTO black_papel_prob_sec(UID,probabilidade) VALUES('".$user->id()."', 1000)";
 		$request->execRequest($statement,'//Pangya Black pappel can\'t be set');
 		
 		//Pangya Tiki
-		$statement = "INSERT INTO pangya_tiki_points(UID, Tiki_Points, REG_DATE, MOD_DATE) VALUES('".$user->id()."',0,'".$user->dateToUse()."','".$user->dateToUse()."')";
+		$statement = "INSERT INTO pangya_tiki_points(UID, Tiki_Points, REG_DATE, MOD_DATE) VALUES('".$user->id()."', 0,'".$user->dateToUse()."','".$user->dateToUse()."')";
 		$request->execRequest($statement,'Pangya Tiki can\'t be set');
 	
 		//Pangya Room
-		$statement = "INSERT INTO pangya_myroom(UID, senha, public_lock, state) VALUES('".$user->id()."',NULL,0,0)";
+		$statement = "INSERT INTO pangya_myroom(UID, senha, public_lock, state) VALUES('".$user->id()."', NULL, 0, 0)";
 		$request->execRequest($statement,'Pangya Room can\'t be set');
 	
 		//Pangya Casier
-		$statement = "INSERT INTO pangya_dolfini_locker(UID, senha, pang, locker) VALUES('".$user->id()."',0,0,0)";
+		$statement = "INSERT INTO pangya_dolfini_locker(UID, senha, pang, locker) VALUES('".$user->id()."', 0, 0, 0)";
 		$request->execRequest($statement,'Pangya Room can\'t be set');
 
 		//Pangya Assistant
-		$statement = "INSERT INTO pangya_assistente(UID,Assist) VALUES('".$user->id()."',0)";
+		$statement = "INSERT INTO pangya_assistente(UID,Assist) VALUES('".$user->id()."', 0)";
 		$request->execRequest($statement,'Pangya Assistant can\'t be set');
 
 		//Pangya Grand Zodiac
-		$statement = "INSERT INTO pangya_grand_zodiac_pontos(UID,pontos) VALUES('".$user->id()."',1000)";
+		$statement = "INSERT INTO pangya_grand_zodiac_pontos(UID,pontos) VALUES('".$user->id()."', 1000)";
 		$request->execRequest($statement,'Pangya Grand Zodiac can\'t be set');
 
 		//Pangya Daily Quest
@@ -101,7 +103,7 @@ if(isset($_POST['name']) && isset($_POST['pass']) && isset($_POST['email']) )
 		$request->execRequest($statement,'Pangya - Insert In beta BDD can\'t be set');
 	
 		//Pangya Log IP ? NOP sorry i set local ip because , i don't care
-		$statement = "INSERT INTO pangya_player_ip(UID, IP) VALUES('".$user->id()."', '127.0.0.1')";
+		$statement = "INSERT INTO pangya_player_ip(UID, IP) VALUES('".$user->id()."', '".$_SERVER['REMOTE_ADDR']."')";
 		$request->execRequest($statement,'Pangya - Insert In beta BDD can\'t be set');
 		$request->close();
 		echo 'OK';
