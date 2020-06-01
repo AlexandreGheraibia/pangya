@@ -4,7 +4,7 @@ require("../lib.php");
 require("../MngDb.php");
 //todo create class manage copy items
 //add delete
-//perhaps add the tables choice for use a table with all items for initialize from it or from another user
+//perhaps add the tables choice for use a table with all items for initialize a user from it or from another user
 function copyWarehouse($request,$destUid,$srcUid){
 		//supressing destination warehouse
 		//$request->execRequest("DELETE FROM `pangya_item_warehouse` WHERE UID='".$destUid."'",'delete fails for destination id : '.$destUid);
