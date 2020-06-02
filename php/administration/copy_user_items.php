@@ -2,7 +2,7 @@
 require("../../config.php");
 require("../lib.php");
 require("../MngDb.php");
-//todo create a class who manage copy items
+//todo create class manage copy items
 //add delete
 //perhaps add the tables choice for use a table with all items for initialize a user from it or from another user
 function copyWarehouse($request,$destUid,$srcUid){
@@ -13,9 +13,10 @@ function copyWarehouse($request,$destUid,$srcUid){
 					(
 					SELECT '".$destUid."',typeid,valid,regdate,Gift_flag,flag,Applytime,EndDate,C0,C1,C2,C3,C4,Purchase,ItemType,ClubSet_WorkShop_Flag,ClubSet_WorkShop_C0,ClubSet_WorkShop_C1,ClubSet_WorkShop_C2,ClubSet_WorkShop_C3,ClubSet_WorkShop_C4,Mastery_Pts,Recovery_Pts,Level,Up,Total_Mastery_Pts,Mastery_Gasto
 					FROM pangya_item_warehouse as w1
-					WHERE UID=".$srcUid." and NOT EXISTS(SELECT typeid
-														 FROM pangya_item_warehouse as w2
-														 WHERE w1.typeid = w2.typeid and UID=".$destUid.")
+					WHERE UID=".$srcUid." and NOT EXISTS(
+						SELECT typeid
+						FROM pangya_item_warehouse as w2
+						WHERE w1.typeid = w2.typeid and UID=".$destUid.")
 					)";
 		$request->execRequest($statement,'warehouse copy fails');	
 }
@@ -30,9 +31,9 @@ function copyClubSet($request,$destUid,$srcUid){
 						INNER JOIN pangya_item_warehouse as w
 							ON c.UID='".$srcUid."' and c.UID=w.UID and w.typeid=c.item_id
 						 WHERE NOT EXISTS(
-										 SELECT item_id
-										 FROM pangya_clubset_enchant as c2
-										 WHERE c.item_id = c2.item_id and c2.UID=".$destUid."
+								SELECT item_id
+								FROM pangya_clubset_enchant as c2
+								WHERE c.item_id = c2.item_id and c2.UID=".$destUid."
 						 )
 						
 					)";
@@ -45,9 +46,10 @@ function copyClubSet($request,$destUid,$srcUid){
 				(	
 					SELECT ".$destUid.",wa.id,c.pang,c.c0,c.c1,c.c2,c.c3,c.c4
 					FROM pangya_clubset_enchant as c
-					WHERE NOT EXISTS(SELECT item_id
-									 FROM pangya_clubset_enchant as c2
-									 WHERE c.item_id = c2.item_id and UID=".$destUid.")
+					WHERE NOT EXISTS(
+							SELECT item_id
+							FROM pangya_clubset_enchant as c2
+							WHERE c.item_id = c2.item_id and UID=".$destUid.")
 					INNER JOIN (
 						SELECT w1.item_id as item_id,w2.item_id as id
 						FROM pangya_item_warehouse as w1
@@ -68,13 +70,16 @@ function copy_character($request,$destUid,$srcUid){
 				(	
 					SELECT typeid,".$destUid.",parts_1,parts_2,parts_3,parts_4,parts_5,parts_6,parts_7,parts_8,parts_9,parts_10,parts_11,parts_12,parts_13,parts_14,parts_15,parts_16,parts_17,parts_18,parts_19,parts_20,parts_21,parts_22,parts_23,parts_24,default_hair,default_shirts,gift_flag,PCL0,PCL1,PCL2,PCL3,PCL4,Purchase,auxparts_1,auxparts_2,auxparts_3,auxparts_4,auxparts_5,CutIn,Mastery
 					FROM pangya_character_information as c1
-					WHERE UID=".$srcUid." and NOT EXISTS(SELECT typeid
-												 FROM pangya_character_information as c2
-												 WHERE c1.typeid = c2.typeid and UID=".$destUid.")
+					WHERE UID=".$srcUid." and NOT EXISTS(
+						SELECT typeid
+						FROM pangya_character_information as c2
+						WHERE c1.typeid = c2.typeid and UID=".$destUid."
+					)
 				)";
 	
 	$request->execRequest($statement,'character copy fails');
-	$statement=	"SELECT MAX(item_id) as id
+	$statement=	"
+				SELECT MAX(item_id) as id
 				FROM pangya_character_information
 				WHERE UID='".$destUid."'
 				";
@@ -83,9 +88,10 @@ function copy_character($request,$destUid,$srcUid){
 	{
 		$row = mysqli_fetch_assoc($res);
 		$maxId =$row["id"];
-		$statement=	"UPDATE pangya_user_equip 
-					 SET character_id='".$maxId."'
-					 WHERE UID='".$destUid."'";
+		$statement=	"
+					UPDATE pangya_user_equip 
+					SET character_id='".$maxId."'
+					WHERE UID='".$destUid."'";
 		$request->execRequest($statement,'character copy fails');
 	}
 }
@@ -99,9 +105,11 @@ function copy_card($request,$destUid,$srcUid){
 				(	
 					SELECT ".$destUid.",card_typeid,QNTD,GET_DT,USE_DT,END_DT,Slot,Efeito,Efeito_Qntd,card_type,USE_YN
 					FROM pangya_card as c1
-					WHERE UID=".$srcUid." and NOT EXISTS(SELECT card_typeid
-												 FROM pangya_card as c2
-												 WHERE c1.card_typeid = c2.card_typeid and UID=".$destUid." )
+					WHERE UID=".$srcUid." and NOT EXISTS(
+						SELECT card_typeid
+						FROM pangya_card as c2
+						WHERE c1.card_typeid = c2.card_typeid and UID=".$destUid."
+					)
 				)";
 	$res=$request->execRequest($statement,'card copy fails');
 }
@@ -126,8 +134,8 @@ function copy_user_items($param1,$param2){
 			
 			if (isset($_POST['items'])) {
 				$copy_mode_array=$_POST['items'];
-				foreach ($copy_mode_array as $copy_mode){
-					 switch ($copy_mode) {
+				foreach ($copy_type_array as $copy_items){
+					 switch ($copy_items) {
 						 case "club":
 							copyClubSet($request,$destUid,$srcUid);
 							break;
