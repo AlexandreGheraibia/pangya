@@ -21,9 +21,23 @@ function copyWarehouse($request,$destUid,$srcUid){
 }
 
 function copyClubSet($request,$destUid,$srcUid){
-	if(!in_array("warehouse",$_POST['items'])){//check if checked value are always in the direction
-		copyWarehouse($request,$destUid,$srcUid);//todo insert just clubsets based on pangya_clubset_enchant
-	}
+	//if(!in_array("warehouse",$_POST['items'])){//check if checked value are always in the direction
+		//copyWarehouse($request,$destUid,$srcUid);//todo insert just clubsets based on pangya_clubset_enchant
+		$statement="INSERT INTO pangya_item_warehouse (UID,typeid,valid,regdate,Gift_flag,flag,Applytime,EndDate,C0,C1,C2,C3,C4,Purchase,ItemType,ClubSet_WorkShop_Flag,ClubSet_WorkShop_C0,ClubSet_WorkShop_C1,ClubSet_WorkShop_C2,ClubSet_WorkShop_C3,ClubSet_WorkShop_C4,Mastery_Pts,Recovery_Pts,Level,Up,Total_Mastery_Pts,Mastery_Gasto) 
+					(
+						SELECT '".$destUid."',w.typeid,w.valid,w.regdate,w.Gift_flag,w.flag,w.Applytime,w.EndDate,w.C0,w.C1,w.C2,w.C3,w.C4,w.Purchase,w.ItemType,w.ClubSet_WorkShop_Flag,w.ClubSet_WorkShop_C0,w.ClubSet_WorkShop_C1,w.ClubSet_WorkShop_C2,w.ClubSet_WorkShop_C3,w.ClubSet_WorkShop_C4,w.Mastery_Pts,w.Recovery_Pts,w.Level,w.Up,w.Total_Mastery_Pts,w.Mastery_Gasto
+						FROM pangya_clubset_enchant as c
+						INNER JOIN pangya_item_warehouse as w
+							ON c.UID='".$srcUid."' and c.UID=w.UID and w.typeid=c.item_id
+						 WHERE NOT EXISTS(
+										 SELECT item_id
+										 FROM pangya_clubset_enchant as c2
+										 WHERE c.item_id = c2.item_id and c2.UID=".$destUid."
+						 )
+						
+					)";
+		$request->execRequest($statement,'ClubSet copy fails');
+	//}
 	//supressing destination club
 	//$request->execRequest("DELETE FROM `pangya_clubset_enchant` WHERE UID='".$destUid."'",'delete fails for destination id : '.$destUid);
 	//copy club configuration from source to destination user 
@@ -33,7 +47,7 @@ function copyClubSet($request,$destUid,$srcUid){
 					FROM pangya_clubset_enchant as c
 					WHERE NOT EXISTS(SELECT item_id
 									 FROM pangya_clubset_enchant as c2
-									 WHERE c.item_id = c2.item_id and UID<>".$destUid.")
+									 WHERE c.item_id = c2.item_id and UID=".$destUid.")
 					INNER JOIN (
 						SELECT w1.item_id as item_id,w2.item_id as id
 						FROM pangya_item_warehouse as w1
@@ -42,7 +56,7 @@ function copyClubSet($request,$destUid,$srcUid){
 						) as wa ON c.item_id=wa.item_id and c.uid=".$srcUid."
 						
 				)";
-	$res=$request->execRequest($statement,'card copy fails');
+	$request->execRequest($statement,'ClubSet copy fails');
 						
 }
 
