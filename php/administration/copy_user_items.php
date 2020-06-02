@@ -31,12 +31,16 @@ function copyClubSet($request,$destUid,$srcUid){
 				(	
 					SELECT ".$destUid.",wa.id,c.pang,c.c0,c.c1,c.c2,c.c3,c.c4
 					FROM pangya_clubset_enchant as c
+					WHERE NOT EXISTS(SELECT item_id
+									 FROM pangya_clubset_enchant as c2
+									 WHERE c.item_id = c2.item_id and UID<>".$destUid.")
 					INNER JOIN (
 						SELECT w1.item_id as item_id,w2.item_id as id
 						FROM pangya_item_warehouse as w1
 						INNER JOIN pangya_item_warehouse as w2
 							ON ((w2.UID=".$destUid." and w1.UID=".$srcUid.") and (w1.typeid=w2.typeid))  			
 						) as wa ON c.item_id=wa.item_id and c.uid=".$srcUid."
+						
 				)";
 	$res=$request->execRequest($statement,'card copy fails');
 						
@@ -124,7 +128,7 @@ function copy_user_items($param1,$param2){
 						break;
 					}
 				}
-				echo 'Congratulation copy done!';	
+				echo 'Congratulation the copy was done!';	
 			}else{
 				
 				echo 'You must choose one or more items to copy!';	
