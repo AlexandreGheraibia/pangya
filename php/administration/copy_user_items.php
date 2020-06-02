@@ -2,7 +2,7 @@
 require("../../config.php");
 require("../lib.php");
 require("../MngDb.php");
-//todo create class manage copy items
+//todo create a class who manage copy items
 //add delete
 //perhaps add the tables choice for use a table with all items for initialize a user from it or from another user
 function copyWarehouse($request,$destUid,$srcUid){
