@@ -2,7 +2,7 @@
 require("../../config.php");
 require("../lib.php");
 require("../MngDb.php");
-//todo create class manage copy items
+//todo create a class manage copy items
 //add delete
 //perhaps add the tables choice for use a table with all items for initialize a user from it or from another user
 function copyWarehouse($request,$destUid,$srcUid){
@@ -78,17 +78,17 @@ function copy_character($request,$destUid,$srcUid){
 				)";
 	
 	$request->execRequest($statement,'character copy fails');
-	$statement=	"
-				SELECT MAX(item_id) as id
-				FROM pangya_character_information
-				WHERE UID='".$destUid."'
+	$statement="
+					SELECT MAX(item_id) as id
+					FROM pangya_character_information
+					WHERE UID='".$destUid."'
 				";
 	$res=$request->execRequest($statement,'character copy fails');
 	if (mysqli_num_rows($res) > 0) 
 	{
 		$row = mysqli_fetch_assoc($res);
 		$maxId =$row["id"];
-		$statement=	"
+		$statement="
 					UPDATE pangya_user_equip 
 					SET character_id='".$maxId."'
 					WHERE UID='".$destUid."'";
@@ -131,9 +131,8 @@ function copy_user_items($param1,$param2){
 			$row = mysqli_fetch_assoc($res);
 			$destUid= $row["UID"];
 			
-			
 			if (isset($_POST['items'])) {
-				$copy_mode_array=$_POST['items'];
+				$copy_type_array=$_POST['items'];
 				foreach ($copy_type_array as $copy_items){
 					 switch ($copy_items) {
 						 case "club":
@@ -152,15 +151,9 @@ function copy_user_items($param1,$param2){
 				}
 				echo 'Congratulation the copy was done!';	
 			}else{
-				
 				echo 'You must choose one or more items to copy!';	
-			}
-
-			
+			}			
 			$request->close();
-			
-				
-				
 	}
 	else{
 		die('<div class="formstatuserror">You need write all</div>');
