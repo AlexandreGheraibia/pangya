@@ -22,8 +22,7 @@ function copyWarehouse($request,$destUid,$srcUid){
 }
 
 function copyClubSet($request,$destUid,$srcUid){
-	//if(!in_array("warehouse",$_POST['items'])){//check if checked value are always in the direction
-		//copyWarehouse($request,$destUid,$srcUid);//todo insert just clubsets based on pangya_clubset_enchant
+	if(!in_array("warehouse",$_POST['items'])){
 		$statement="INSERT INTO pangya_item_warehouse (UID,typeid,valid,regdate,Gift_flag,flag,Applytime,EndDate,C0,C1,C2,C3,C4,Purchase,ItemType,ClubSet_WorkShop_Flag,ClubSet_WorkShop_C0,ClubSet_WorkShop_C1,ClubSet_WorkShop_C2,ClubSet_WorkShop_C3,ClubSet_WorkShop_C4,Mastery_Pts,Recovery_Pts,Level,Up,Total_Mastery_Pts,Mastery_Gasto) 
 					(
 						SELECT '".$destUid."',w.typeid,w.valid,w.regdate,w.Gift_flag,w.flag,w.Applytime,w.EndDate,w.C0,w.C1,w.C2,w.C3,w.C4,w.Purchase,w.ItemType,w.ClubSet_WorkShop_Flag,w.ClubSet_WorkShop_C0,w.ClubSet_WorkShop_C1,w.ClubSet_WorkShop_C2,w.ClubSet_WorkShop_C3,w.ClubSet_WorkShop_C4,w.Mastery_Pts,w.Recovery_Pts,w.Level,w.Up,w.Total_Mastery_Pts,w.Mastery_Gasto
@@ -38,7 +37,7 @@ function copyClubSet($request,$destUid,$srcUid){
 						
 					)";
 		$request->execRequest($statement,'ClubSet copy fails');
-	//}
+	}
 	//supressing destination club
 	//$request->execRequest("DELETE FROM `pangya_clubset_enchant` WHERE UID='".$destUid."'",'delete fails for destination id : '.$destUid);
 	//copy club configuration from source to destination user 
@@ -111,7 +110,7 @@ function copy_card($request,$destUid,$srcUid){
 						WHERE c1.card_typeid = c2.card_typeid and UID=".$destUid."
 					)
 				)";
-	$res=$request->execRequest($statement,'card copy fails');
+	$request->execRequest($statement,'card copy fails');
 }
 
 function copy_user_items($param1,$param2){
@@ -135,15 +134,15 @@ function copy_user_items($param1,$param2){
 				$copy_type_array=$_POST['items'];
 				foreach ($copy_type_array as $copy_items){
 					 switch ($copy_items) {
-						 case "club":
-							copyClubSet($request,$destUid,$srcUid);
-							break;
 						case "warehouse":
 							copyWarehouse($request,$destUid,$srcUid);
-							break;
+						break;
+						case "club":
+							copyClubSet($request,$destUid,$srcUid);
+						break;
 						case "card":
 							copy_card($request,$destUid,$srcUid);
-							break;
+						break;
 						case "character":
 							copy_character($request,$destUid,$srcUid);
 						break;
