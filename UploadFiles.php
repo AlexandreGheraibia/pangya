@@ -4,7 +4,7 @@
 	include "../config/config.inc";
 	include "../config/MysqlManager.inc";
 	$atual_dir = getcwd();
-	$fopDebug = fopen($atual_dir."\\DebugAlex.log", "w");
+	//$fopDebug = fopen($atual_dir."\\DebugAlex.log", "w");
 	
 	$db = new MysqlManager($con_dados);
 	$params = new paramsArr();
@@ -13,31 +13,31 @@
 	$key = (isset($_POST['selfDesignKey'])) ? $_POST['selfDesignKey'] : "";
 
 	$query = "CALL ProcCheckSecurityKey(?, ?, ?)";
-	fwrite($fopDebug, "uccuid:");
-	fwrite($fopDebug, $uccuid);
-	fwrite($fopDebug, "item_id:");
-	fwrite($fopDebug, $item_id);
-	fwrite($fopDebug, "key:");
-	fwrite($fopDebug, $key);
+	//fwrite($fopDebug, "uccuid:");
+	//fwrite($fopDebug, $uccuid);
+	//fwrite($fopDebug, "item_id:");
+	//fwrite($fopDebug, $item_id);
+	//fwrite($fopDebug, "key:");
+	//fwrite($fopDebug, $key);
 	$params->clear();
 	$params->add('i', $uccuid);
 	$params->add('i', $item_id);
 	$params->add('s', $key);
-		fwrite($fopDebug, "ici 1\n");
+	//	fwrite($fopDebug, "ici 1\n");
 	if ($result = $db->execPreparedStmt($query, $params->get())) {
-	   fwrite($fopDebug, "ici 2\n");
+	 //  fwrite($fopDebug, "ici 2\n");
 		$row = $result->fetch_assoc();
-		fwrite($fopDebug, "row:");
-		fwrite($fopDebug, $row['UID']);
+	//	fwrite($fopDebug, "row:");
+	//	fwrite($fopDebug, $row['UID']);
 		if(!empty($row['UID']) && $uccuid != 0 && $uccuid == $row['UID']){
 			$selfDesignName=$_FILES['selfDesignFileName']['name'];
-			 fwrite($fopDebug, "selfDesignName\n");
-			 fwrite($fopDebug,$selfDesignName);
+		//	 fwrite($fopDebug, "selfDesignName\n");
+		//	 fwrite($fopDebug,$selfDesignName);
 			$start=strrpos ( $selfDesignName,"_");
 			$end=strrpos ( $selfDesignName,".");
 			$UCCIDX = substr($selfDesignName,$start+1,$end-$start-1);
-			 fwrite($fopDebug, "UCCIDX:");
-			 fwrite($fopDebug, $UCCIDX);
+		//	 fwrite($fopDebug, "UCCIDX:");
+		//	 fwrite($fopDebug, $UCCIDX);
 			$query = "SELECT UID FROM TU_UCC WHERE UID = ? AND UCCIDX = ?";
 
 			$params->clear();
@@ -45,12 +45,12 @@
 			$params->add('s', $UCCIDX);
 
 			if ($result = $db->execPreparedStmt($query, $params->get())) {
-					 fwrite($fopDebug, "ici 4\n");
+				//fwrite($fopDebug, "ici 4\n");
 				$row = $result->fetch_assoc();
 
 				if(!empty($row['UID']) && $uccuid != 0 && $uccuid == $row['UID']){
 					$atual_dir = getcwd();
-						 fwrite($fopDebug, "ici 5\n");
+				       // fwrite($fopDebug, "ici 5\n");
 					chdir("../");
 
 					$dir = getcwd();
