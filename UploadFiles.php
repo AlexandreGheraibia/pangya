@@ -4,7 +4,7 @@
 	include "../config/config.inc";
 	include "../config/MysqlManager.inc";
 	$atual_dir = getcwd();
-	//todo add a status check on the selfdesign
+	
 	//$fopDebug = fopen($atual_dir."\\DebugAlex.log", "w");
 	
 	$db = new MysqlManager($con_dados);
@@ -84,22 +84,20 @@
 
 						echo "0";
 					}else{
-						//security breach here to solve it, we must invalidate
-						//the security key from the database
-						//or echo 0
-						//for renew the key
+						
+						
 						echo "3";
 					}
 				}else{
 					echo "12"; # UCCIDX Errado
-					//security breach
+					
 				}
 			}else {
 				echo "13"; # Erro no execPreparedStmt
-				//security breach
+				
 			}
 		}else{
-			//security breach
+			
 			echo "1";
 		}
 	}else {
