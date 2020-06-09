@@ -4,7 +4,7 @@
 	include "../config/config.inc";
 	include "../config/MysqlManager.inc";
 	$atual_dir = getcwd();
-	//todo add a status check of the selfdesign
+	//todo add a status check on the selfdesign
 	//$fopDebug = fopen($atual_dir."\\DebugAlex.log", "w");
 	
 	$db = new MysqlManager($con_dados);
