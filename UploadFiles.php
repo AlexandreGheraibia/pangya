@@ -83,8 +83,10 @@
 
 						echo "0";
 					}else{
-						//security breach here to solve it, we must unvalidate
+						//security breach here to solve it, we must invalidate
 						//the security key from the database
+						//or echo 0
+						//for renew the key
 						echo "3";
 					}
 				}else{
