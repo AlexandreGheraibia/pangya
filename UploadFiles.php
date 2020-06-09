@@ -4,6 +4,7 @@
 	include "../config/config.inc";
 	include "../config/MysqlManager.inc";
 	$atual_dir = getcwd();
+	
 	//$fopDebug = fopen($atual_dir."\\DebugAlex.log", "w");
 	
 	$db = new MysqlManager($con_dados);
@@ -83,15 +84,20 @@
 
 						echo "0";
 					}else{
+						
+						
 						echo "3";
 					}
 				}else{
 					echo "12"; # UCCIDX Errado
+					
 				}
 			}else {
 				echo "13"; # Erro no execPreparedStmt
+				
 			}
 		}else{
+			
 			echo "1";
 		}
 	}else {
