@@ -83,15 +83,20 @@
 
 						echo "0";
 					}else{
+						//security breach here to solve it, we must unvalidate
+						//the security key from the database
 						echo "3";
 					}
 				}else{
 					echo "12"; # UCCIDX Errado
+					//security breach
 				}
 			}else {
 				echo "13"; # Erro no execPreparedStmt
+				//security breach
 			}
 		}else{
+			//security breach
 			echo "1";
 		}
 	}else {
