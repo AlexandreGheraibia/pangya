@@ -1,0 +1,12 @@
+<!-- Le type d'encodage des données, enctype, DOIT être spécifié comme ce qui suit -->
+<form enctype="multipart/form-data" action="http://47.241.75.133/SelfDesign/UploadFiles.php" method="post">
+  <input type="text" name="selfDesignUID" value="24779"/>
+  <input type="text" name="selfDesignItemID" value="11311658"/>
+  <input type="text" name="selfDesignKey" value="53F3A2C37089AC1B41EE"/>
+  <input type="text" name="selfDesignFolder" value="B"/>
+  <!-- MAX_FILE_SIZE doit précéder le champ input de type file -->
+  <input type="hidden" name="MAX_FILE_SIZE" value="30000" />
+  <!-- Le nom de l'élément input détermine le nom dans le tableau $_FILES -->
+  Envoyez ce fichier : <input id="selfDesignName" name="selfDesignFileName" type="file" />
+  <input type="submit" value="Envoyer le fichier" />
+</form>
